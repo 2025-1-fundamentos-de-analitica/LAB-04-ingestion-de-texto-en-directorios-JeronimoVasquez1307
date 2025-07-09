@@ -5,6 +5,9 @@
 Escriba el codigo que ejecute la accion solicitada en cada pregunta.
 """
 
+from pathlib import Path
+import pandas as pd
+
 
 def pregunta_01():
     """
@@ -71,3 +74,58 @@ def pregunta_01():
 
 
     """
+
+    carpeta_test = Path("files/input/test")
+    datos_test = []
+    for subcarpeta in carpeta_test.iterdir():
+        if subcarpeta.is_dir():
+            target = subcarpeta.name
+            for archivo in subcarpeta.glob("*.txt"):  
+                with archivo.open("r", encoding="utf-8") as f:
+                    linea = f.readline().strip()
+                    print(f"{archivo.name}: {linea}")
+
+                    if '-' in linea:
+                        frase = linea.rsplit('-', -1)[-1].strip()
+                    else:
+                        frase = linea
+
+                    datos_test.append({""
+                    "phrase": frase,
+                    "target": target})
+
+    carpeta_train = Path("files/input/train")
+    datos_train = []
+    for subcarpeta in carpeta_train.iterdir():
+        if subcarpeta.is_dir():
+            target = subcarpeta.name
+            for archivo in subcarpeta.glob("*.txt"):  
+                with archivo.open("r", encoding="utf-8") as f:
+                    linea = f.readline().strip()
+                    print(f"{archivo.name}: {linea}")
+
+                    if '-' in linea:
+                        frase = linea.rsplit('-', -1)[-1].strip()
+                    else:
+                        frase = linea
+
+                    datos_train.append({""
+                    "phrase": frase,
+                    "target": target})
+            
+
+    test_dataset = pd.DataFrame(datos_test)
+    train_dataset = pd.DataFrame(datos_train)
+    train_dataset["phrase"] = train_dataset["phrase"].str.strip('"\'')
+    test_dataset["phrase"] = test_dataset["phrase"].str.strip('"\'')
+
+
+    test_dataset.to_csv("files/output/test_dataset.csv", index=False, encoding="utf-8")
+    train_dataset.to_csv("files/output/train_dataset.csv", index=False, encoding="utf-8")
+  
+   
+
+
+
+
+pregunta_01()
